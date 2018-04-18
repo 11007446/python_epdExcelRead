@@ -1,5 +1,5 @@
 import openpyxl
-from epd_util  import Epd_util
+from epd_util import Epd_util
 
 # epd_batchinfo
 # epd_batchstatement
@@ -16,11 +16,10 @@ def loadExcelData(filepath):
     pass
 
 
-
 def parseSheetData(sheet):
-    epd_u =  Epd_util()
+    epd_u = Epd_util()
     sheet_title = sheet.title
-    sqlpart =  epd_u.BASE_SQL[sheet_title]
+    sqlpart = epd_u.BASE_SQL[sheet_title]
     pass
 
 # wb = openpyxl.load_workbook('example.xlsx')  
