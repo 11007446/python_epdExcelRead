@@ -6,11 +6,11 @@ from epd_util import Epd_util
 # epd_pginfo
 # epd_expertinfo
 # epd_projectinfo
-# epd_log    
+# epd_log
 
 
 def loadExcelData(filepath):
-    wb = openpyxl.load_workbook(filepath)  
+    wb = openpyxl.load_workbook(filepath)
     for sheet in wb:
         parseSheetData(sheet)
     pass
@@ -22,13 +22,10 @@ def parseSheetData(sheet):
     sqlpart = epd_u.BASE_SQL[sheet_title]
     pass
 
-# wb = openpyxl.load_workbook('example.xlsx')  
-# sheet = wb.get_sheet_by_name('Sheet1')  
-# for row in sheet.iter_rows():  
-#     for cell in row:  
-#         print(cell.coordinate, cell.value)  
-# print('--- END OF ROW ---')  
-    
 
-
-
+# wb = openpyxl.load_workbook('example.xlsx')
+# sheet = wb.get_sheet_by_name('Sheet1')
+# for row in sheet.iter_rows():
+#     for cell in row:
+#         print(cell.coordinate, cell.value)
+# print('--- END OF ROW ---')
