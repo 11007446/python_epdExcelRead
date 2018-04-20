@@ -1,4 +1,9 @@
+# -*- coding: UTF-8 -*-
+import datetime
+# import sys
 import openpyxl
+import os
+import shutil
 from epd_util import Epd_util
 
 # epd_batchinfo
@@ -9,52 +14,63 @@ from epd_util import Epd_util
 # epd_log
 
 
-def loadExcelData(filepath):
-    wb = openpyxl.load_workbook(filepath)
-    sheetnames = wb.get_sheet_names()
-    for sheet in sheetnames:
-        parseSheetData(wb.get_sheet_by_name(sheet))
+def loadExcelData(filenamepath, outputpath='./'):
+    (filename, ext) = os.path.splitext(os.path.basename(filenamepath))
+
+    wb = openpyxl.load_workbook(filenamepath)
+    foldname = '%s_%s生成' % (
+        filename, str(datetime.datetime.now().strftime('%Y%m%d')))
+    sqlfilenamepath = outputpath + foldname + '/'
+    if os.path.exists(sqlfilenamepath):
+        shutil.rmtree(sqlfilenamepath)
+    os.makedirs(sqlfilenamepath)
+    batchid = wb['epd_batchinfo']['A3'].value
+    batchgroupid = wb['epd_batchinfo']['F3'].value
+    for sheet in wb.sheetnames:
+        print('解析表%s开始' % (sheet))
+        parseSheetData(wb[sheet], sqlfilenamepath, batchid, batchgroupid)
+        print('解析表%s完成' % (sheet))
     pass
+    # parseSheetData(wb['epd_pginfo'], sqlfilenamepath, batchid,
+    #                batchgroupid)
 
 
-# epd_batchinfo
-# ('','',,'','','',,,,,'ZJ','010',getdate(),'',' 23:59:59' );
-# epd_batchstatement
-# (newid(),'','','','','','','','',,,,,'','','','','','','','','');
-# epd_pginfo
-# ('','','','','','',,,,'','',,getdate(),'0','1');
-# epd_expertinfo
-# ('','','_','','',getdate());
-# epd_projectinfo
-# ('','','',,getdate());
-# epd_log
-# ('','',getdate(),'','');
-
-
-def parseRow(row, sheet_title):
-    pass
-
-
-def parseSheetData(sheet):
+def parseSheetData(sheet, sqlfilenamepath, batchid, batchgroupid):
     epd_u = Epd_util()
     sheet_title = sheet.title
-    sqlpart = epd_u.BASE_SQL[sheet_title]
-    maxRow = sheet.get_highest_row()
-    maxCol = sheet.get_highest_column()
-    for rowIndex in range(2, maxRow):
-        rowlist = []
-        for colIndex in range(1, maxCol):
-            cellvalue = sheet.cell(row=4, column=2).value
-            rowlist.append(cellvalue)
+    columnpart = epd_u.BASE_SQL[sheet_title]
+    valuepart = epd_u.VALUE_SQL[sheet_title]
+    maxRow = sheet.max_row
+    maxCol = sheet.max_column
+    outputfilename = sheet_title + '_' + str(
+        datetime.datetime.now().strftime('%Y%m%d%H%M')) + '.sql'
+    with open(sqlfilenamepath + outputfilename, 'w', encoding='utf-8') as fw:
+        for row in sheet.iter_rows(row_offset=2, max_row=maxRow - 2):
+            rowlist = []
+            for cell in row:
+                cellvalue = cell.value
+                #if not cellvalue: is None 判断是否None
+                if cellvalue is None:
+                    rowlist.append('')
+                else:
+                    rowlist.append(cellvalue)
+            if sheet_title == 'epd_batchstatement':
+                rowlist.append(batchgroupid)
+            if sheet_title == 'epd_pginfo':
+                rowlist.append(batchid)
+                rowlist.append(batchgroupid)
+
+            mainsql = columnpart + valuepart.format(rowlist)
+            fw.write(mainsql + '\n')
+        fw.write('--%s数据共计%d条\n\n' % (sheet_title, maxRow - 2))
 
     pass
 
 
-# wb = openpyxl.load_workbook('example.xlsx')
-# sheet = wb.get_sheet_by_name('Sheet1')
-# for row in sheet.iter_rows():
-#     for cell in row:
-#         print(cell.coordinate, cell.value)
-# print('--- END OF ROW ---')
 if __name__ == "__main__":
+    #loadExcelData(sys.argv[1])
+    # loadExcelData(
+    #     'D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx',
+    #     'D:/cvsdocument/应用开发部/科研计划项目/专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/导入脚本/')
+    loadExcelData('D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx')
     pass
