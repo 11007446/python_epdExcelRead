@@ -6,8 +6,8 @@ class ConfigUtil:
 
     def __init__(self):
         conf_ini = "./test.ini"
-        self.__config = ConfigObj('epdconfig.ini', encoding='UTF8')
+        self = ConfigObj('epdconfig.ini', encoding='UTF8')
         pass
 
-    def getConfigString(self, section, key):
-        return self.__config[section][key]
+    def getConfigString(self, key, section='path'):
+        return self[section][key]

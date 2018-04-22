@@ -5,6 +5,7 @@ import openpyxl
 import os
 import shutil
 from epd_util import Epd_util
+from configUtil import ConfigUtil
 
 
 # epd_batchinfo
@@ -15,10 +16,11 @@ from epd_util import Epd_util
 # epd_log
 
 
-def loadExcelData(filenamepath, outputpath='./'):
-
+def loadExcelData():
+    config = ConfigUtil()
+    filenamepath = config.getConfigString('EXCELINPUTPATH')
+    outputpath = config.getConfigString('SQLOUTPUTPATH')
     (filename, ext) = os.path.splitext(os.path.basename(filenamepath))
-
     wb = openpyxl.load_workbook(filenamepath)
     foldname = '%s_%s生成' % (filename,
                             str(datetime.datetime.now().strftime('%Y%m%d')))
@@ -74,7 +76,5 @@ if __name__ == "__main__":
     # loadExcelData(
     #     'D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx',
     #     'D:/cvsdocument/应用开发部/科研计划项目/专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/导入脚本/')
-    loadExcelData(
-        'D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx'
-    )
+    loadExcelData()
     pass
