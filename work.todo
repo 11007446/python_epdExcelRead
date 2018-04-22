@@ -1,0 +1,11 @@
+python处理认定EXCEL:
+    基本功能:
+        ✔ 读取excel生成sql @done (2018-4-20 22:37:03)
+        ☐ 数据插入数据库
+    功能优化加强:
+        ☐ 导入文件,输出文件通过配置方式传递 http://www.voidspace.org.uk/python/configobj.html#documentation
+        ☐ 异常捕获输出日志
+        ☐ 使用更好第三方库进行文件处理,excel处理
+        ☐ 代码混淆
+    总结:
+        ☐ 形成wiz总结报告

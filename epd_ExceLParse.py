@@ -6,6 +6,7 @@ import os
 import shutil
 from epd_util import Epd_util
 
+
 # epd_batchinfo
 # epd_batchstatement
 # epd_pginfo
@@ -15,11 +16,12 @@ from epd_util import Epd_util
 
 
 def loadExcelData(filenamepath, outputpath='./'):
+
     (filename, ext) = os.path.splitext(os.path.basename(filenamepath))
 
     wb = openpyxl.load_workbook(filenamepath)
-    foldname = '%s_%s生成' % (
-        filename, str(datetime.datetime.now().strftime('%Y%m%d')))
+    foldname = '%s_%s生成' % (filename,
+                            str(datetime.datetime.now().strftime('%Y%m%d')))
     sqlfilenamepath = outputpath + foldname + '/'
     if os.path.exists(sqlfilenamepath):
         shutil.rmtree(sqlfilenamepath)
@@ -49,7 +51,7 @@ def parseSheetData(sheet, sqlfilenamepath, batchid, batchgroupid):
             rowlist = []
             for cell in row:
                 cellvalue = cell.value
-                #if not cellvalue: is None 判断是否None
+                # if not cellvalue: is None 判断是否None
                 if cellvalue is None:
                     rowlist.append('')
                 else:
@@ -68,9 +70,11 @@ def parseSheetData(sheet, sqlfilenamepath, batchid, batchgroupid):
 
 
 if __name__ == "__main__":
-    #loadExcelData(sys.argv[1])
+    # loadExcelData(sys.argv[1])
     # loadExcelData(
     #     'D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx',
     #     'D:/cvsdocument/应用开发部/科研计划项目/专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/导入脚本/')
-    loadExcelData('D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx')
+    loadExcelData(
+        'D:/cvsdocument/应用开发部\科研计划项目\专家评审费发放管理系统/维护文档/2018年度/万达认定数据导入/原始备份/高企财务导数据2016.xlsx'
+    )
     pass
