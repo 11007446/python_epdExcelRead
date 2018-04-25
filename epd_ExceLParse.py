@@ -17,7 +17,7 @@ import pyodbc
 
 
 def loadExcel():
-    ''' 
+    '''
     读取配置文件中待解析excel文件\文件列表,以及输出sql文件路径.
     解析Excel内容,生成Sql Insert语句执行,并保存到sql文件留档
     '''
